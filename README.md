@@ -239,3 +239,4 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o bin
 ```text
 https://github.com/golang-migrate/migrate
 ```
+### Implement Database Migration Rollback Guard

@@ -228,3 +228,8 @@ indirect packages
 ```bash
 go mod tidy
 ```
+
+### Production build command
+```text
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o bin/api ./cmd/api
+```

@@ -240,3 +240,25 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o bin
 https://github.com/golang-migrate/migrate
 ```
 ### Implement Database Migration Rollback Guard
+```go
+setup
+// internal/handlers/listings.go
+package handlers
+
+import (
+	"database/sql"
+	"net/http"
+)
+
+func List(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("all ok"))
+	}
+}
+```
+```go
+usages
+// cmd/api/main.go
+mux.HandleFunc("GET /listings", handlers.List(db))
+```
+### Fetching Database Records & Returning JSON

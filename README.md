@@ -235,3 +235,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o bin
 ```
 ### Refactore Health function
 ### Setting up PostgreSQL
+### Manage Database Migration for Production
+```text
+https://github.com/golang-migrate/migrate
+```

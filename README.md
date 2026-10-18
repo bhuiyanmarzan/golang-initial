@@ -280,5 +280,34 @@ FROM pg_stat_activity
 WHERE
     query LIKE '%pg_sleep%'
     AND state != 'idle';
-
+```
+### Structured logging
+by default, this is only strings
+```go
+// internal/listings.go
+	slog.Error("delete failed", "listing_id", id, "err", err)
+```
+```go
+// internal/listings.go
+	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	log.Error("delete failed", "listing_id", id, "err", err)
+```
+another way, set default logger
+```go
+// main.go
+// Global logger
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+```
+then use any file
+```go
+// internal/listings.go
+	slog.Error("delete failed", "listing_id", id, "err", err)
+```
+slog lavel
+```go
+slog.Debug("debug log", "listing_id", id)
+slog.Info("info log", "listing_id", id)
+slog.Warn("warn log", "listing_id", id)
+slog.Error("error log", "listing_id", id)
 ```

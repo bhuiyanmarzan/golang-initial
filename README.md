@@ -263,3 +263,22 @@ mux.HandleFunc("GET /listings", handlers.List(db))
 ```
 ### Fetching Database Records & Returning JSON
 ### Build DELETE Endpoint with the Constructor Pattern
+### Prevent Zombie Queries using Context
+Hold the connection 20s this query
+```go
+	rows, err := lh.db.Query(
+		`SELECT id, title, description, price, city, created_at, pg_sleep(20)
+			FROM listings
+			ORDER BY created_at DESC
+			LIMIT 100`)
+```
+To Check query running or not
+```SQL
+// seeds/status.sql
+SELECT pid, state, query_start, query
+FROM pg_stat_activity
+WHERE
+    query LIKE '%pg_sleep%'
+    AND state != 'idle';
+
+```

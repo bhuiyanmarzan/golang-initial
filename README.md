@@ -262,3 +262,4 @@ usages
 mux.HandleFunc("GET /listings", handlers.List(db))
 ```
 ### Fetching Database Records & Returning JSON
+### Build DELETE Endpoint with the Constructor Pattern

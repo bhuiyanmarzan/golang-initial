@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/bhuiyanmarzan/olx-api/internal/middleare"
 )
 
 type listing struct {
@@ -33,6 +35,7 @@ func NewListingHandler(db *sql.DB, logger *slog.Logger) *ListingHandler {
 func (lh ListingHandler) List(w http.ResponseWriter, r *http.Request) {
 	// request scope context
 	ctx := r.Context()
+
 	rows, err := lh.db.QueryContext(ctx,
 		`SELECT id, title, description, price, city, created_at
 			FROM listings
@@ -71,6 +74,7 @@ func (lh ListingHandler) List(w http.ResponseWriter, r *http.Request) {
 
 func (lh ListingHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	requestId := middleare.RequestIDFromContext(ctx)
 	id := r.PathValue("id")
 
 	_, err := lh.db.ExecContext(ctx,
@@ -78,7 +82,7 @@ func (lh ListingHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("delete: %v", err)
 		// log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-		lh.logger.Error("delete failed", "listing_id", id, "err", err)
+		lh.logger.Error("delete failed", "request_id", requestId, "listing_id", id, "err", err)
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}

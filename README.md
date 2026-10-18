@@ -311,3 +311,4 @@ slog.Info("info log", "listing_id", id)
 slog.Warn("warn log", "listing_id", id)
 slog.Error("error log", "listing_id", id)
 ```
+### Error Envelopes: Standardizing API Error Response

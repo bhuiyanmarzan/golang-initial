@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"log"
 	"log/slog"
 	"net/http"
@@ -96,14 +97,22 @@ func (lh ListingHandler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := middleare.RequestIDFromContext(ctx)
 	var req CreateListingRequest
+	// var id string
+	// var out listing
+	var out CreateListingResponse
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		lh.logger.Error("failed to decode", "request_id", requestId, "err", err)
 		httpx.Error(w, http.StatusBadRequest, "invalid body", httpx.CodeMalformedJson)
 		return
 	}
-	// var id string
-	// var out listing
-	var out CreateListingResponse
+
+	if err := req.Validate(); err != nil {
+		var verr *ValidationError
+		errors.As(err, &verr)
+		httpx.ValidationError(w, http.StatusUnprocessableEntity, err.Error(), httpx.CodeValidationFailed, verr.Field)
+		return
+	}
+
 	row := lh.db.QueryRowContext(ctx, `
 		INSERT INTO listings (title, description, price, city)
 		VALUES ($1, $2, $3, $4)

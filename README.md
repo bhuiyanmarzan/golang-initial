@@ -312,3 +312,21 @@ slog.Warn("warn log", "listing_id", id)
 slog.Error("error log", "listing_id", id)
 ```
 ### Error Envelopes: Standardizing API Error Response
+mas assignment problem, here user in input random id, this is the mas assignment problem
+```go
+type listing struct {
+	ID          string    `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Price       int64     `json:"price"`
+	City        string    `json:"city"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+	var req listing
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		lh.logger.Error("failed to decode", "request_id", requestId, "err", err)
+		httpx.Error(w, http.StatusBadRequest, "invalid body", httpx.CodeMalformedJson)
+		return
+	}
+```
